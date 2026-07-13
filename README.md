@@ -28,9 +28,13 @@ wanderlust/
 Getting Started:
 
 bashgit clone https://github.com/<your-username>/wanderlust.git
+
 cd wanderlust
+
 npm install
+
 npm start
+
 
 Create a .env file with:
 

@@ -6,7 +6,7 @@ const Listing = require("./models/listing");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const wrapAsync = require("./utils/wrapAsync.js");
-const ExpressError=require("./utils/wrapAsync.js");
+const ExpressError=require("./utils/ExpressError.js");
 
 
 
@@ -40,17 +40,22 @@ app.get("/", (req, res) =>{
 // Index Route:
 app.get("/listings",wrapAsync (async (req, res) => {
     const allListings = await Listing.find({});
-    res.render("listings/index.ejs", {allListings});
+    res.render("listings/index.ejs", { allListings });
     }));
 
     
 
     // Update Route:
-    app.put("/listings/:id", wrapAsync(async(req,res) => {
-        let { id } = req.params;
+    app.put("/listings/:id", 
+        wrapAsync(async(req,res) => {
+            if(!req.body.listing){
+                throw new ExpressError(400, "Send valid data for listing");
+            }
+            let { id } = req.params;
         await Listing.findByIdAndUpdate(id, {...req.body.listing});
         res.redirect(`/listings/${id}`);
-    }));
+    })
+);
 
     // Delete Route
     app.delete("/listings/:id", wrapAsync(async (req, res) => {
@@ -61,8 +66,10 @@ app.get("/listings",wrapAsync (async (req, res) => {
     }));
 
      // New Route
-    app.get("/listings/new", (req,res) => {
-        res.render("listings/new.ejs");
+    app.get("/listings/new", async(req,res) => {
+        let { id } = req.params;
+        const listing = await Listing.findById(id);
+        res.render("listings/new.ejs", { listing });
     });
 
     // Show Route:
@@ -73,16 +80,18 @@ app.get("/listings",wrapAsync (async (req, res) => {
     }));
 
     // Create Route
-    app.post("/listings", 
+    app.post(
+        "/listings", 
         wrapAsync(async (req,res, next) => {
-            try {
+            if(!req.body.listing) {
+                throw new ExpressError(400, "Send valid data for listing")
+            }
+
         const newlisting = new Listing(req.body.listing);
         await newlisting.save();
         res.redirect("/listings");
-            }catch(err) {
-             next(err);
-            }
-}));
+        })
+    );
 
 
 // Edit Route:
@@ -108,7 +117,7 @@ app.get("/listings",wrapAsync (async (req, res) => {
 // });
 
 
-app.all("*", (req, res, next) => {
+app.all("/*splat", (req, res, next) => {
     next(new ExpressError(404, "Page Not Found!"));
 });
 

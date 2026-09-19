@@ -28,6 +28,7 @@ async function main() {
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({extended: true}));
+app.use(express.json());
 app.use(methodOverride("_method"));
 app.engine("ejs",ejsMate);
 app.use(express.static(path.join(__dirname, "/public")));
@@ -126,7 +127,7 @@ app.all("/*splat", (req, res, next) => {
 app.use((err, req, res, next) => {
     console.log(err);
     let { statusCode = 500, message = "Something went wrong" } = err;
-    res.render("error.ejs", { message });
+    res.status(statusCode).render("listings/error.ejs", { message });
     // res.status(statusCode).send(message);
 });
 

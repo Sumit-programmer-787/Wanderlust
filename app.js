@@ -39,8 +39,17 @@ app.get("/", (req, res) =>{
     res.send("Hi,I am root");
 });
 
+const validateListing = (req, res, next) => {
+    let { error } = listingSchema.validate(req.body);
+    if (error) {
+        let errMsg = error.details.map((el) => el.message).join(", ");
+        throw new ExpressError(400, errMsg);
+    }
+    next();
+};
 // Index Route:
-app.get("/listings",wrapAsync (async (req, res) => {
+app.get("/listings",
+    wrapAsync (async (req, res) => {
     const allListings = await Listing.find({});
     res.render("listings/index.ejs", { allListings });
     }));
@@ -49,10 +58,11 @@ app.get("/listings",wrapAsync (async (req, res) => {
 
     // Update Route:
     app.put("/listings/:id", 
+        validateListing,
         wrapAsync(async(req,res) => {
-            if(!req.body.listing){
-                throw new ExpressError(400, "Send valid data for listing");
-            }
+            // if(!req.body.listing){
+            //     throw new ExpressError(400, "Send valid data for listing");
+            // }
             let { id } = req.params;
         await Listing.findByIdAndUpdate(id, {...req.body.listing});
         res.redirect(`/listings/${id}`);
@@ -60,7 +70,8 @@ app.get("/listings",wrapAsync (async (req, res) => {
 );
 
     // Delete Route
-    app.delete("/listings/:id", wrapAsync(async (req, res) => {
+    app.delete("/listings/:id",
+         wrapAsync(async (req, res) => {
         let { id } = req.params;
         let deletedListing = await Listing.findByIdAndDelete(id);
         console.log(deletedListing);
@@ -69,13 +80,14 @@ app.get("/listings",wrapAsync (async (req, res) => {
 
      // New Route
     app.get("/listings/new", async(req,res) => {
-        let { id } = req.params;
-        const listing = await Listing.findById(id);
-        res.render("listings/new.ejs", { listing });
+        // let { id } = req.params;
+        // const listing = await Listing.findById(id);
+        res.render("listings/new.ejs");
     });
 
     // Show Route:
-    app.get("/listings/:id", wrapAsync(async(req, res) => {
+    app.get("/listings/:id",
+         wrapAsync(async(req, res) => {
         let {id} = req.params;
         const listing = await Listing.findById(id);
         res.render("listings/show.ejs", { listing });
@@ -84,17 +96,22 @@ app.get("/listings",wrapAsync (async (req, res) => {
     // Create Route
     app.post(
         "/listings", 
+        validateListing,
         wrapAsync(async (req,res, next) => {
             let result = listingSchema.validate(req.body);
             console.log(result);
+            if ( result.error){
+                throw new ExpressError(400, result.error);
+            }
             const newListing = new Listing(req.body.listing);
             await newListing.save();
             res.redirect("/listings");
-        })
-    );
+
+    }));
 
 // Edit Route:
-    app.get("/listings/:id/edit", wrapAsync(async(req,res) => {
+    app.get("/listings/:id/edit", 
+        wrapAsync(async(req,res) => {
         let { id } = req.params;
         const listing = await Listing.findById(id);
         res.render("listings/edit.ejs", { listing });

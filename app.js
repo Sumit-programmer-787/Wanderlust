@@ -44,8 +44,9 @@ const validateListing = (req, res, next) => {
     if (error) {
         let errMsg = error.details.map((el) => el.message).join(", ");
         throw new ExpressError(400, errMsg);
-    }
+    }else{
     next();
+    }
 };
 // Index Route:
 app.get("/listings",
@@ -98,11 +99,11 @@ app.get("/listings",
         "/listings", 
         validateListing,
         wrapAsync(async (req,res, next) => {
-            let result = listingSchema.validate(req.body);
-            console.log(result);
-            if ( result.error){
-                throw new ExpressError(400, result.error);
-            }
+            // let result = listingSchema.validate(req.body);
+            // console.log(result);
+            // if ( result.error){
+            //     throw new ExpressError(400, result.error);
+            // }
             const newListing = new Listing(req.body.listing);
             await newListing.save();
             res.redirect("/listings");

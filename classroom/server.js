@@ -12,9 +12,9 @@ app.get("/getcookies", (req, res) => {
     res.send("sent you some cookies!");
 });
 
-app.get("/", (req, res) => {
-    console.dir(req.cookies);
-    res.send("Hi, I am root!");
+app.get("/greet", (req, res) => {
+   let {name = "anonymous" } = req.cookies;
+    res.send(`Hi, ${name}`);
 });
 
 app.use("/users", users);

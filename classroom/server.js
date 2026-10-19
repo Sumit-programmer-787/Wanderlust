@@ -18,6 +18,11 @@ app.get("/verify", (req,res) => {
 });
 
 
+app.get("/", (req, res) => {
+    res.send("Hi, I am root");
+});
+
+
 app.get("/getcookies", (req, res) => {
     res.cookie("greet", "namaste");
     res.cookie("madeIn", "India");

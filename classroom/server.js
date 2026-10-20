@@ -10,22 +10,30 @@ const sessionOptions = {
     saveUninitialized: true,
 };
 
+
 app.use(session(sessionOptions));
 
+
 app.get("/register", (req, res) =>{
-    let { name } = req.query;
+    let { name = "anonymous" } = req.query;
+    req.session.name = name;
     res.send(name);
 });
 
+app.get("/hello", (req, res) => {
+    res.send(`hello, ${req.session.name}`); 
+});
 
-app.use(
-    session({ 
-        secret: "mysupersecretstring",
-        resave: false,
-        saveUninitialized: true,
+
+
+// app.use(
+//     session({ 
+//         secret: "mysupersecretstring",
+//         resave: false,
+//         saveUninitialized: true,
     
-    })
-);
+//     })
+// );
 
 
 // app.get("/test", (req, res) => {

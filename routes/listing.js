@@ -66,11 +66,9 @@ router.get("/",
                 router.put("/:id", 
                     validateListing,
                     wrapAsync(async(req,res) => {
-                        // if(!req.body.listing){
-                        //     throw new ExpressError(400, "Send valid data for listing");
-                        // }
                         let { id } = req.params;
                     await Listing.findByIdAndUpdate(id, {...req.body.listing});
+                    req.flash("success", "Listing Updated");
                     res.redirect(`/listings/${id}`);
                 })
             );            
@@ -85,6 +83,5 @@ router.get("/",
             
                  
             
-                
             
                 module.exports = router;

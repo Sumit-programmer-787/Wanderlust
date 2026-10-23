@@ -44,14 +44,10 @@ const sessionOptions = {
     cookie: {
         expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
         maxAge: 7 * 24 * 60 * 60 * 1000,
-        httponly: true,
+        httpOnly: true,
     },
 };
 
-
-app.get("/", (req, res) =>{
-    res.send("Hi,I am root");
-});
 
 app.use(session(sessionOptions));
 app.use(flash());
@@ -59,7 +55,12 @@ app.use(flash());
 
 app.use((req, res, next) => {
     res.locals.success = req.flash("success");
+    res.locals.error = req.flash("error");
     next();
+});
+
+app.get("/", (req, res) =>{
+    res.send("Hi,I am root");
 });
 
     

@@ -37,8 +37,13 @@ router.get("/",
                  wrapAsync(async(req, res) => {
                 let {id} = req.params;
                 const listing = await Listing.findById(id).populate("reviews");
+                if(!listing) {
+                    req.flash("error", "Listing you requested for does not exist!");
+                    res.redirect("/listings");
+                }
                 res.render("listings/show.ejs", { listing });
-            }));
+            })
+        );
 
 
             // Create Route
@@ -76,12 +81,11 @@ router.get("/",
                 router.delete("/:id",
                      wrapAsync(async (req, res) => {
                     let { id } = req.params;
-                    let deletedListing = await Listing.findByIdAndDelete(id);
-                    console.log(deletedListing);
-                    res.redirect("/listings");
+                    let deletedListing = await Listing.findByIdAndDelete(id, { ...req.body.listing });
+                    req.flash("success", "Listing Deleted");
+                    res.redirect("/listings/${id");
                 }));
             
                  
-            
-            
+
                 module.exports = router;

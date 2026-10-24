@@ -21,13 +21,16 @@ router.get("/",
     wrapAsync (async (req, res) => {
     const allListings = await Listing.find({});
     res.render("listings/index.ejs", { allListings });
-    }));
+    })
+);
 
 
     // New Route
            router.get("/new", async(req,res) => {
-                // let { id } = req.params;
-                // const listing = await Listing.findById(id);
+                if(!req.isAuthenticated()) {
+                    req.flash("error", "you must be logged in to create listing");
+                    res.redirect("/listings");
+                }
                 res.render("listings/new.ejs");
             });
 

@@ -3,7 +3,7 @@ const { route } = require("./listing");
 const router = express.Router();
 
 router.get("/signup", (req, res) => {
-    res.render("users/signup.ejs");
+   res.send("form");
 });
 
 

@@ -37,7 +37,8 @@ router.post(
         failureFlash: true,
     }),
     async (req, res) => {
-      res.send("success", "Welcome back to Wanderlust! You are logged in!");
+      res.send("success", "Welcome back to Wanderlust!");
+      res.redirect("/listings");
     }
 );
 module.exports = router;

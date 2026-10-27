@@ -48,7 +48,8 @@ router.get("/",
 
             // Create Route
             router.post(
-            "/", 
+            "/",
+            isLoggedIn, 
             validateListing,
             wrapAsync(async (req,res, next) => {
                 const newListing = new Listing(req.body.listing);
@@ -87,10 +88,12 @@ router.get("/",
                 router.delete("/:id",
                      wrapAsync(async (req, res) => {
                     let { id } = req.params;
-                    let deletedListing = await Listing.findByIdAndDelete(id, { ...req.body.listing });
+                    let deletedListing = await Listing.findByIdAndDelete(id);
+                    console.log(deletedListing);
                     req.flash("success", "Listing Deleted");
                     res.redirect("/listings/${id");
-                }));
+                })
+            );
             
                  
 

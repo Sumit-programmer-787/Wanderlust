@@ -73,7 +73,8 @@ router.get("/",
             );
 
                 // Update Route:
-                router.put("/:id", 
+                router.put("/:id",
+                    isLoggedIn, 
                     validateListing,
                     wrapAsync(async(req,res) => {
                         let { id } = req.params;

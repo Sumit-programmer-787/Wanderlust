@@ -39,7 +39,7 @@ router.get("/",
                 const listing = await Listing.findById(id).populate("reviews");
                 if(!listing) {
                     req.flash("error", "Listing you requested for does not exist!");
-                    res.redirect("/listings");
+                    return res.redirect("/listings");
                 }
                 res.render("listings/show.ejs", { listing });
             })

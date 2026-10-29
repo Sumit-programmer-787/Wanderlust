@@ -12,7 +12,7 @@ router.get("/signup", (req, res) => {
 
 router.post(
     "/signup",
-    wrapAsync(async (req, res) => {
+    wrapAsync(async (req, res, next) => {
         try {
             let { username, email, password } = req.body;
             const newUser = new User({ email, username });
@@ -45,7 +45,8 @@ router.post(
     }),
    async (req, res) => {
         req.flash("success", "Welcome back to Wanderlust!");
-        res.redirect(req.locals.redirectUrl);
+        let redirectUrl = res.locals.redirectUrl || "/listings";
+        res.redirect(redirectUrl);
     }
 );
 

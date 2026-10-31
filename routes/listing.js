@@ -90,7 +90,7 @@ router.get("/",
                 let { id } = req.params;
                 let listing = await Listing.findById(id);
 
-             if (!listing.owner.equals(req.user._id)) {
+             if (!listing.owner.equals(res.locals.currUser._id)) {
              req.flash("error", "You don't have permission to edit");
              return res.redirect(`/listings/${id}`);
          }

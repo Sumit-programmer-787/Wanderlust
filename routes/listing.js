@@ -82,16 +82,25 @@ router.get("/",
             );
 
                 // Update Route:
-                router.put("/:id",
-                    isLoggedIn, 
-                    validateListing,
-                    wrapAsync(async(req,res) => {
-                        let { id } = req.params;
-                    await Listing.findByIdAndUpdate(id, {...req.body.listing});
-                    req.flash("success", "Listing Updated");
-                    res.redirect(`/listings/${id}`);
-                })
-            );            
+                router.put(
+                "/:id",
+                isLoggedIn,
+                validateListing,
+                wrapAsync(async (req, res) => {
+                let { id } = req.params;
+                let listing = await Listing.findById(id);
+
+             if (!listing.owner.equals(req.user._id)) {
+             req.flash("error", "You don't have permission to edit");
+             return res.redirect(`/listings/${id}`);
+         }
+
+            await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+            req.flash("success", "Listing Updated!");
+            res.redirect(`/listings/${id}`);
+    })
+);
+
                 // Delete Route
                 router.delete(
                     "/:id",

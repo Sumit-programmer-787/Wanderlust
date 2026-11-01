@@ -4,7 +4,7 @@ const wrapAsync = require("../utils/wrapAsync.js");
 const ExpressError=require("../utils/ExpressError.js");
 const { listingSchema } = require("../schema.js");
 const Listing = require("../models/listing");
-const { isLoggedIn, isOwner, validateListing } = require("../middleware.js");
+const { isLoggedIn, isOwner } = require("../middleware.js");
 
 
 const validateListing = (req, res, next) => {
@@ -75,7 +75,7 @@ router.get("/",
                     wrapAsync(async(req,res) => {
                     let { id } = req.params;
                     const listing = await Listing.findById(id);
-                    if (! listing) {
+                    if (!listing) {
                         req.flash("error", "Listing you requested for does not exist");
                         return res.redirect("/listings");
                     }
@@ -98,19 +98,18 @@ router.get("/",
 );
 
                 // Delete Route
-                router.delete(
-                    "/:id",
-                    isLoggedIn,
-                    isOwner,
-                     wrapAsync(async (req, res) => {
-                    let { id } = req.params;
-                    await Listing.findByIdAndDelete(id);
-                    let deletedListing = await Listing.findByIdAndDelete(id);
-                    console.log(deletedListing);
-                    req.flash("success", "Listing Deleted");
-                    res.redirect("/listings/${id");
-                })
-            );
+router.delete(
+    "/:id",
+    isLoggedIn,
+    isOwner,
+    wrapAsync(async (req, res) => {
+        let { id } = req.params;
+        let deletedListing = await Listing.findByIdAndDelete(id);
+        console.log(deletedListing);
+        req.flash("success", "Listing Deleted");
+        res.redirect("/listings");
+    })
+);
             
                  
 

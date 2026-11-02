@@ -18,6 +18,7 @@ router.post(
     let newReview = new Review(req.body.review);
     newReview.author = req.user._id;
     console.log(newReview);
+    
     listing.reviews.push(newReview);
 
     await newReview.save();

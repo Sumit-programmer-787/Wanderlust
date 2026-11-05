@@ -35,7 +35,7 @@ module.exports.createListing = async(req, res, next) => {
                 console.log(req.user);
                 newListing.owner = req.user._id;
                 await newListing.save();
-                req.flash("success", "New Listing Create!");
+                req.flash("success", "New Listing Created!");
                 res.redirect("/listings");
 };
 
@@ -48,5 +48,20 @@ let { id } = req.params;
         return res.redirect("/listings");
     }
 
-    res.render("listings/show.ejs", { listing });
+    res.render("listings/edit.ejs", { listing });
+};
+
+module.exports.updateListing = async(req, res) => {
+    let { id } = req.params;
+    await Listing.findByIdAndUpdate(id, { ...req.body.listing});
+    req.flash("success", "Listing Updated!");
+    res.redirect(`/listings/${id}`);
+};
+
+module.exports.destroyListing = async(req, res) => {
+    let { id } = req.params;
+    let deletedListing = await Listing.findByIdAndDelete(id);
+    console.log(deletedListing);
+    req.flash("success", "Listing Deleted!");
+    res.redirect("/listings");
 };

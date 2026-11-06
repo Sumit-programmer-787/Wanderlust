@@ -20,3 +20,6 @@ module.exports.signup = async(req, res) => {
     }
 };
 
+module.exports.renderSignupForm = (req, res) => {
+    res.render("users/login.ejs");
+};

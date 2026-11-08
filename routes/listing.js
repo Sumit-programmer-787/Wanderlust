@@ -8,37 +8,16 @@ const { isLoggedIn, isOwner, validateListing } = require("../middleware.js");
 
 const listingController = require("../controllers/listings.js");
 
+
+
 // Index Route:
-router.get("/",
-    wrapAsync(async (req, res) => {
-        const allListings = await Listing.find({});
-        res.render("listings/index.ejs", { allListings });
-    })
-);
+router.get("/", wrapAsync(listingController.index));
 
 // New Route
 router.get("/new", isLoggedIn, listingController.renderNewForm);
 
 // Show Route:
-router.get(
-    "/:id",
-    wrapAsync(async (req, res) => {
-        let { id } = req.params;
-        const listing = await Listing.findById(id)
-            .populate({
-                path: "reviews",
-                populate: {
-                    path: "author",
-                },
-            })
-            .populate("owner");
-        if (!listing) {
-            req.flash("error", "Listing you requested for does not exist!");
-            return res.redirect("/listings");
-        }
-        res.render("listings/show.ejs", { listing });
-    })
-);
+router.get(":/id", wrapAsync(listingController.showListing));
 
 // Create Route
 router.post(

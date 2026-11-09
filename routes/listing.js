@@ -17,6 +17,24 @@ router
     wrapAsync(listingController.createListing)
 );
 
+
+router
+.route("/:id")
+.get("/:id",wrapAsync(listingController.showListing))
+.post(
+    "/:id",
+    isLoggedIn,
+    isOwner,
+    validateListing,
+    wrapAsync(listingController.updateListing)
+)
+.delete(
+    "/:id",
+    isLoggedIn,
+    isOwner,
+    wrapAsync(listingController.destroyListing)
+)
+
 // Index Route:
 router.get("/", wrapAsync(listingController.index));
 

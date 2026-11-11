@@ -17,29 +17,26 @@ router
     wrapAsync(listingController.createListing)
 );
 
+// New Route
+router.get("/new", isLoggedIn, listingController.renderNewForm);
 
 router
 .route("/:id")
-.get("/:id",wrapAsync(listingController.showListing))
-.post(
-    "/:id",
+.get(wrapAsync(listingController.showListing))
+.put(
     isLoggedIn,
     isOwner,
     validateListing,
     wrapAsync(listingController.updateListing)
 )
 .delete(
-    "/:id",
     isLoggedIn,
     isOwner,
     wrapAsync(listingController.destroyListing)
-)
+);
 
 // Index Route:
 router.get("/", wrapAsync(listingController.index));
-
-// New Route
-router.get("/new", isLoggedIn, listingController.renderNewForm);
 
 // Show Route:
 router.get("/:id", wrapAsync(listingController.showListing));

@@ -5,8 +5,9 @@ const ExpressError = require("../utils/ExpressError.js");
 const { listingSchema } = require("../schema.js");
 const Listing = require("../models/listing");
 const { isLoggedIn, isOwner, validateListing } = require("../middleware.js");
-
 const listingController = require("../controllers/listings.js");
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/'})
 
 router
 .route("/")
@@ -16,9 +17,9 @@ router
 //     validateListing,
 //     wrapAsync(listingController.createListing)
 // );
-.post((req, res) => {
-    res.send(req.body);
-})
+.post(upload.single("listing[image]"), (req, res) => {
+    res.send(req.file);
+});
 
 
 // New Route

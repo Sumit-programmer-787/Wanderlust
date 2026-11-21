@@ -1,6 +1,9 @@
-if (process.env.NODE_ENV != "production") {
-require("dotenv").config();
+if (process.env.NODE_ENV !== "production") {
+    require("dotenv").config();
 }
+
+
+console.log("MapTiler API Key Loaded:", !!process.env.KrXMqBIRBRARVChtNPQJ);
 
 const express = require("express");
 const path = require("path");

@@ -3,7 +3,7 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 
-console.log("MapTiler API Key Loaded:", !!process.env.KrXMqBIRBRARVChtNPQJ);
+console.log("MapTiler API Key Loaded:", !!process.env.MAPTILER_API_KEY);
 
 const express = require("express");
 const path = require("path");

@@ -25,12 +25,36 @@ module.exports.showListing = async (req, res) => {
         return res.redirect("/listings");
     }
 
-    res.render("listings/show.ejs", { listing });
+    res.render("listings/show.ejs", { 
+        listing,
+        maptilerApiKey: process.env.MAPTILER_API_KEY
+
+    });
 };
 
 module.exports.createListing = async (req, res) => {
     const newListing = new Listing(req.body.listing);
     newListing.owner = req.user._id;
+
+    // MapTiler Geocoding
+    const searchQuery = `${newListing.location}, ${newListing.country}`;
+
+    const geoResponse = await fetch(
+        `https://api.maptiler.com/geocoding/${encodeURIComponent(searchQuery)}.json?key=${process.env.MAPTILER_API_KEY}&limit=1`
+    );
+
+    const geoData = await geoResponse.json();
+
+    if (!geoResponse.ok || !geoData.features || geoData.features.length === 0) {
+        req.flash("error", "Location not found. Please enter a valid location.");
+        return res.redirect("/listings/new");
+    }
+
+    newListing.geometry = {
+        type: "Point",
+        coordinates: geoData.features[0].geometry.coordinates,
+    };
+
     if (req.file) {
         let url = req.file.path;
         let filename = req.file.filename;

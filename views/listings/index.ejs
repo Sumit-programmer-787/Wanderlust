@@ -20,6 +20,10 @@
         .filter p {
             font-size: 0.8rem;
         }
+
+        .tax-info{
+            display: none;
+        }
     </style>
 
 
@@ -86,11 +90,13 @@
                 alt="listing_image" 
                 style="height: 20rem" 
                 />
+
                 <div class="card-img-overlay"></div>
                 <div class="card-body">
                     <p class="card-text">
                         <b><%= listing.title %> </b> <br/>
                         &#8377; <%= listing.price.toLocaleString("en-IN")%> / night
+                        <i class="tax-info"> &nbsp; &nbsp;+18% GST</i>
                     </p>
                 </div>
             </div>
@@ -100,8 +106,11 @@
         <script>
             let taxSwitch = document.getElementById("flexSwitchCheckDefault");
             taxSwitch.addEventListener("click", () => {
-                console.log("clicked");
-            })
+                let taxInfo = document.getElementsByClassName("tax-info");
+                for(info of taxInfo) {
+                    info.style.display = "inline";
+                }
+            });
         </script>
 </body>
 </html>

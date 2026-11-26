@@ -62,19 +62,20 @@
            <div><i class="fa-duotone fa-solid fa-snowflake"></i></div> 
          <p>Arctic</p>
 </div>
-           <div class="filter">
-           <div><i class="fa-solid fa-person-swimming"></i></div> 
-         <p>Amazing Pools </p>
-</div>
-           <div class="filter">
-           <div><i class="fa-solid fa-person-swimming"></i></div> 
-         <p>Amazing Pools </p>
 
-<!-- </div> -->
-        </div>
+<div class="tax-toggle">
+    <div class="form-check-reverse form-switch">
+        <input class="form-check-input" 
+        type="checkbox" 
+        role="switch" 
+        id="flexSwitchCheckDefault"
+        />
+        <label class="form-check-label"  for="flexSwitchCheckDefault">
+            Display total after taxes</label>
     </div>
+</div>
 
-
+    </div>
     <div class="row row-cols-lg-3 row-cols-md2 row-cols-sm-1 mt-3">
         <% for(let listing of allListings) { %>
             <a href="/listings/<%= listing._id%>" class="listing-link">
@@ -95,5 +96,12 @@
             </div>
             <% } %>
         </div>
+
+        <script>
+            let taxSwitch = document.getElementById("flexSwitchCheckDefault");
+            taxSwitch.addEventListener("click", () => {
+                console.log("clicked");
+            })
+        </script>
 </body>
 </html>
